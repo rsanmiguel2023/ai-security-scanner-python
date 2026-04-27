@@ -78,6 +78,28 @@ def display_bandit_results(results):
     console.print(table)
 
 
+def display_dependency_results(results):
+    table = Table(title="Dependency Vulnerability Findings")
+
+    table.add_column("Package")
+    table.add_column("Version")
+    table.add_column("Vulnerabilities")
+
+    if not results:
+        console.print("[green]No dependency vulnerabilities found.[/green]")
+        return
+
+    for dep in results:
+        vulns = dep.get("vulns", [])
+        if vulns:
+            table.add_row(
+                dep.get("name", "N/A"),
+                dep.get("version", "N/A"),
+                str(len(vulns))
+            )
+
+    console.print(table)
+
 def save_scan_summary(bandit_results, dependency_results):
     summary_file = REPORTS_DIR / "scan_summary.json"
 
@@ -92,6 +114,7 @@ def save_scan_summary(bandit_results, dependency_results):
     console.print(f"[green]Scan summary saved to {summary_file}[/green]")
 
 
+
 def main():
     console.print("[bold cyan]AI Security Scanner for Python[/bold cyan]")
 
@@ -104,6 +127,7 @@ def main():
     dependency_results = run_pip_audit()
 
     display_bandit_results(bandit_results)
+    display_dependency_results(dependency_results)
     save_scan_summary(bandit_results, dependency_results)
 
     console.print("[bold green]Security scan complete.[/bold green]")
