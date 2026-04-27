@@ -1,0 +1,5 @@
+bandit
+pip-audit
+rich
+python-dotenv
+google-genai
