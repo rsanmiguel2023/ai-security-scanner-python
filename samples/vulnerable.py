@@ -1,18 +1,5 @@
-import os
-import subprocess
 import hashlib
 import sqlite3
-
-password = "admin123"
-
-def run_command(user_input):
-    os.system(user_input)
-
-def unsafe_subprocess(cmd):
-    subprocess.call(cmd, shell=True)
-
-run_command("ls")
-unsafe_subprocess("echo hello")
 
 def authenticate(username, password):
     query = f"SELECT * FROM users WHERE username = '{username}' AND password = '{password}'"
@@ -27,7 +14,6 @@ def hash_password(password):
 def process_input(user_input):
     import os
     os.system(f"echo {user_input}")
-
 
 DB_PASSWORD = "password123"
 API_SECRET = "sk-live-abcd1234"

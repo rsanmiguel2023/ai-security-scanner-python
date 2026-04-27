@@ -1,24 +1,54 @@
 # AI Security Scanner for Python (Gemini-Powered)
 
-![Python](https://img.shields.io/badge/Python-3.10%2B-blue)
-![License](https://img.shields.io/badge/License-MIT-green)
-![Status](https://img.shields.io/badge/Status-Active-success)
-![Security](https://img.shields.io/badge/Security-Static%20Analysis-blueviolet)
-![AI](https://img.shields.io/badge/AI-Gemini%20API-lightgrey)
-
-An AI-assisted security analysis tool that scans Python code for vulnerabilities and generates a professional cybersecurity report using Google’s Gemini API.
+![Build Status](https://img.shields.io/github/actions/workflow/status/YOUR-USERNAME/ai-security-scanner-python/ci.yml?branch=main)
+![Coverage](https://img.shields.io/badge/Coverage-Coming%20Soon-lightgrey)
+![Python](https://img.shields.io/badge/Made%20with-Python-1f425f.svg)
+![License](https://img.shields.io/badge/License-MIT-2f2f2f)
+![Status](https://img.shields.io/badge/Status-Active-2ea44f)
+![Security](https://img.shields.io/badge/Security-Static%20Analysis-6f42c1)
+![AI](https://img.shields.io/badge/AI-Gemini%20API-555555)
 
 ---
 
 ## Overview
 
-This project combines static code analysis, dependency vulnerability scanning, and AI-generated reporting into a single workflow.
+This project implements an AI-assisted security analysis pipeline that scans Python code for vulnerabilities and generates structured cybersecurity reports using the Gemini API.
 
-It simulates a real-world cybersecurity pipeline where:
+The workflow integrates:
 
-* Code is scanned for security issues
-* Vulnerabilities are identified
-* AI translates findings into a clear, business-ready report
+* Static code analysis
+* Dependency vulnerability scanning
+* AI-based risk interpretation
+* Direct AI code analysis (pure AI scanner)
+
+---
+
+## Architecture
+
+```text
+Developer Input (Python Code)
+            │
+            ▼
+   Static Analysis (Bandit)
+            │
+            ▼
+ Dependency Scan (pip-audit)
+            │
+            ▼
+   Aggregated Scan Results (JSON)
+            │
+            ▼
+   Gemini API (AI Processing)
+            │
+            ▼
+ AI Security Report Generation
+            │
+            ▼
+ Reports Output (/reports folder)
+            │
+            ▼
+ GitHub Actions CI Pipeline
+```
 
 ---
 
@@ -27,9 +57,25 @@ It simulates a real-world cybersecurity pipeline where:
 * Static Code Analysis using Bandit
 * Dependency Vulnerability Scanning using pip-audit
 * AI Security Report Generation using Gemini API
-* Clean terminal output using Rich
-* Automated report generation in the `/reports` folder
-* Secure API key handling using `.env`
+* Pure AI Code Scanner (Gemini-only analysis)
+* Automated CI security scanning via GitHub Actions
+* Structured reporting saved in `/reports`
+* Secure API key management using `.env`
+
+---
+
+## Continuous Integration (CI)
+
+A GitHub Actions pipeline runs on every push and pull request.
+
+The pipeline:
+
+* Executes Bandit for static analysis
+* Executes pip-audit for dependency vulnerabilities
+* Fails the build when vulnerabilities are detected
+
+Note:
+The sample code intentionally contains insecure patterns to demonstrate detection. CI failures indicate the scanner is working correctly.
 
 ---
 
@@ -40,6 +86,7 @@ ai-security-scanner-python/
 │
 ├── scanner.py
 ├── ai_report.py
+├── ai_only_scanner.py
 ├── requirements.txt
 ├── README.md
 ├── .gitignore
@@ -47,6 +94,9 @@ ai-security-scanner-python/
 │
 ├── samples/
 │   └── vulnerable_app.py
+│
+├── docs/
+│   └── screenshots/
 │
 └── reports/
     ├── scan_summary.json
@@ -85,67 +135,88 @@ pip install -r requirements.txt
 
 ### 4. Configure Gemini API Key
 
-Create a `.env` file in the root directory:
+Create a `.env` file:
 
 ```env
 GEMINI_API_KEY=your_api_key_here
 ```
 
-Get your API key from:
-https://aistudio.google.com/app/apikey
-
 ---
 
 ## How to Run
 
-### Step 1: Run Security Scan
+### Option 1 — Full Security Pipeline
+
+Runs Bandit + pip-audit + AI reporting:
 
 ```bash
 python scanner.py
 ```
 
-When prompted:
-
-```
-Enter folder or file to scan:
-```
-
-Type:
-
-```
-samples
-```
-
-This generates:
-
-```
-reports/scan_summary.json
-```
-
----
-
-### Step 2: Generate AI Security Report
+Then:
 
 ```bash
 python ai_report.py
 ```
 
-Output:
+---
 
+### Option 2 — Pure AI Scanner
+
+Directly analyzes code using Gemini (no Bandit/pip-audit):
+
+```bash
+python ai_only_scanner.py samples/vulnerable_app.py
 ```
-reports/gemini_security_report.txt
-```
+
+---
+
+## Pure AI Scanner
+
+The pure AI scanner sends raw Python code directly to Gemini for analysis.
+
+It provides:
+
+* Vulnerability identification
+* Explanation of risks
+* Business impact
+* Secure code fixes
+
+This approach is useful for:
+
+* Understanding vulnerabilities in plain language
+* Identifying logic-level issues
+* Generating remediation guidance
+
+---
+
+## Screenshots
+
+### Static Code Analysis Output
+
+![Bandit Scan](docs/screenshots/bandit_scan.png)
+
+### Dependency Scan Output
+
+![pip-audit](docs/screenshots/pip_audit.png)
+
+### AI Security Report
+
+![Gemini Report](docs/screenshots/gemini_report.png)
+
+### CI Pipeline Execution
+
+![GitHub Actions](docs/screenshots/github_actions.png)
 
 ---
 
 ## Sample Vulnerabilities Detected
 
-The scanner can identify issues such as:
-
+* SQL injection
+* Weak password hashing (MD5)
+* Command injection
 * Hardcoded credentials
-* Unsafe `os.system()` usage
-* Shell injection risks
-* Vulnerable Python dependencies
+* Exposed API secrets
 
 ---
 
@@ -162,11 +233,11 @@ The generated report includes:
 
 ---
 
-## Security Best Practices
+## Security Notes
 
-* `.env` file is excluded via `.gitignore`
-* API keys are not committed to GitHub
-* Reports can be shared without exposing secrets
+* `.env` is excluded from version control
+* API keys are not committed
+* CI enforces security checks automatically
 
 ---
 
@@ -177,27 +248,25 @@ The generated report includes:
 * pip-audit
 * Rich
 * Google Gemini API (`google-genai`)
-* VS Code
-* GitHub
+* GitHub Actions
 
 ---
 
 ## Use Cases
 
-* Learning cybersecurity fundamentals
-* Demonstrating AI and security integration
-* Portfolio project for data, AI, or security roles
-* Code auditing and vulnerability awareness
+* Cybersecurity portfolio project
+* DevSecOps workflow demonstration
+* AI-assisted vulnerability analysis
+* Secure coding education
 
 ---
 
 ## Future Enhancements
 
-* Streamlit dashboard interface
-* GitHub Actions automation
-* PDF report export
-* Multi-language scanning support
-* CVSS scoring integration
+* Streamlit dashboard
+* CI artifact reports
+* Coverage integration
+* Severity-based CI controls
 
 ---
 
@@ -209,6 +278,6 @@ Toronto, Canada
 
 ---
 
-## GitHub Description (Short)
+## GitHub Description
 
-AI-powered Python security scanner using Bandit, pip-audit, and Gemini API to generate automated cybersecurity reports.
+AI-powered Python security scanner with CI pipeline, static analysis, dependency auditing, and Gemini-based reporting.
