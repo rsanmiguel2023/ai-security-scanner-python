@@ -1,5 +1,8 @@
+streamlit
+pandas
+plotly
+rich
 bandit
 pip-audit
-rich
 python-dotenv
-google-genai
+google-generativeai
